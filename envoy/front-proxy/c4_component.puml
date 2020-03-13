@@ -1,0 +1,36 @@
+@startuml
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+' uncomment the following line and comment the first to use locally
+' !include C4_Component.puml
+
+LAYOUT_TOP_DOWN
+
+title Envoy Front-Proxy
+
+Container_Boundary(frontProxy, "Front Proxy Container") {
+    Container(fp, "Front Proxy", "Envoy Edge Proxy", "Provides Envoy Edge functionaliy. Load-Balancing")
+    Container(fpc, "Front Proxy Envoy Configuration", "front-envoy.yaml", "Provides Envoy Edge Proxy Configuration")
+    Rel(fp, fpc, "Uses")
+}
+
+Boundary(dp, "Data Plane") {
+    Container_Boundary(service1, "Service Container 1") {
+        Component(ep1, "Envoy Proxy", "Envoy Process Proxy", "Provides Envoy Data Plane Configuration")
+        Component(s1, "Service 1", "Golang Example Service", "Provides simple Service Handler")
+        Component(s1c, "Service Envoy Configuration", "service-envoy.yaml", "Provides Service Envoy Configuration")
+        Rel(ep1, s1, "Calls")
+        Rel(s1, s1c, "Uses")
+    }
+
+    Container_Boundary(service2, "Service Container 2") {
+        Component(ep2, "Envoy Proxy", "Envoy Process Proxy", "Provides Envoy Data Plane Configuration")
+        Component(s2, "Service 2", "Golang Example Service", "Provides simple Service Handler")
+        Component(s2c, "Service Envoy Configuration", "service-envoy.yaml", "Provides Service Envoy Configuration")
+        Rel(ep2, s2, "Calls")
+        Rel(s2, s2c, "Uses")
+    }
+}
+
+Rel(fp, ep1, "Uses", "HTTP")
+Rel(fp, ep2, "Uses", "HTTP")
+@enduml
