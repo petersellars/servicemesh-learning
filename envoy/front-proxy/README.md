@@ -143,7 +143,7 @@ docker-compose down -v
 
 ## Architecture
 
-![envoy_font_proxy](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/petersellars/servicemesh-learning/envoy-initial/envoy/front-proxy/c4_component.puml)
+![envoy_font_proxy](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/petersellars/servicemesh-learning/master/envoy/front-proxy/c4_component.puml)
 
 ## References
 
