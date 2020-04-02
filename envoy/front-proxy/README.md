@@ -130,6 +130,58 @@ Let's examine this from top to bottom:
 4. Set the environment variable `SERVICE_NAME` based on the service number
 5. Expose port 80 (for general traffic)
 
+Now we know that our front proxy Envoy instance uses the `front-envoy.yaml`
+configuration we can dive in deeper. Our `front-envoy.yaml` file has two
+top-level elements, `static_resources` and `admin`
+
+```
+static_resources:
+  ...
+admin:
+  ...
+```
+
+The `admin` block is relatively simple.
+
+```
+admin:
+  access_log_path: "/dev/null"
+  address:
+    socket_address:
+	  address: 0.0.0.0
+	  port_value: 8001
+```
+
+We set the `access_log_path` field to `/dev/null`; this discards admin server
+access logs. User should change this value to an appropriate destination in
+live environments. The `address` object tells Envoy to create an admin server
+listening on port 8001.
+
+Unsurprisingly our `static_resources` block contains static definitions for
+`clusters` and `listeners`. A cluster is a named group of hosts/ports, over
+which Envoy will load balance traffic. A listener is a named network location
+that clients connect to. The `admin` block configures our admin server.
+
+Our front proxy has a single listener, configured to listen on port 80, with a
+filter chain that sets up Envoy to manage HTTP traffic.
+
+```
+listeners:
+  - address:
+      socket_address:
+	    address: 0.0.0.0
+		port_value: 80
+	filter_chains:
+	  - filters:
+	    - name: envoy.http.connection_manager
+		    typed_config:
+			  "@type": type.googleapis.com/envoy.config.filter.network.http_connection_manager.v2.HttpConnectionManager
+			  condec_type: auto
+			  stat_prefix: ingress_http
+			  route_config:
+			    name: local_route
+```
+
 ### Front-Proxy Envoy Configuration
 
 ### Service Envoy Configuration
@@ -145,7 +197,7 @@ docker-compose down -v
 
 ![envoy_font_proxy](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/petersellars/servicemesh-learning/master/envoy/front-proxy/c4_component.puml)
 
-## References
+## Resources
 
 * Learn Envoy: [On your Laptop](https://www.envoyproxy.io/learn/on-your-laptop)
 * Turbine Labs: [Getting Started with Envoy on your Laptop](https://blog.turbinelabs.io/getting-started-with-envoy-on-your-laptop-1b1a7073fd8e)
