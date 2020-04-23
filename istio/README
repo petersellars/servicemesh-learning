@@ -1,0 +1,43 @@
+# Istio
+
+Notes based on [Istio in Action v6 MEAP](https://www.manning.com/books/istio-in-action)
+
+## Use Minikube
+
+Minikube: https://minikube.sigs.k8s.io/docs/
+
+### Installation
+
+```
+curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube_1.9.2-0_amd64.deb
+sudo dpkg -i minikube_1.9.2-0_amd64.deb
+```
+
+### Starting Minikube
+```
+$ minikube start --memory=3072 --disk-size=30g --kubernetes-version=1.13.2
+```
+
+### Check Status
+```
+kubectl get nodes
+```
+
+## Use kubectl
+
+kubectl: https://kubernetes.io/docs/tasks/tools/install-kubectl
+
+### Installation
+
+```
+curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
+chmod +x kubectl
+sudo mv kubectl /usr/local/bin/kubectl
+```
+
+## Istio
+
+### Installation
+```
+curl -L https://istio.io/downloadIstio | sh -
+```
